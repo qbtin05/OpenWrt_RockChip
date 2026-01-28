@@ -284,6 +284,16 @@ jobs:
           echo "Device configuration applied"
         fi
 
+    - name: Download the installation package
+      id: package
+      run: |
+        cd openwrt
+        make defconfig
+        cat .config
+        make download -j$(nproc)
+        find dl -size -1024c -exec ls -l {} \;
+        find dl -size -1024c -exec rm -f {} \;
+
     - name: Restore kernel cache
       if: github.event.inputs.use_kernel_cache == 'true'
       uses: actions/cache/restore@v4
@@ -294,16 +304,6 @@ jobs:
         key: kernel-cache-${{ env.REPO_BRANCH }}-${{ hashFiles('openwrt/.config') }}
         restore-keys: |
           kernel-cache-${{ env.REPO_BRANCH }}-
-
-    - name: Download the installation package
-      id: package
-      run: |
-        cd openwrt
-        make defconfig
-        cat .config
-        make download -j$(nproc)
-        find dl -size -1024c -exec ls -l {} \;
-        find dl -size -1024c -exec rm -f {} \;
 
     - name: Compile the firmware
       id: compile
