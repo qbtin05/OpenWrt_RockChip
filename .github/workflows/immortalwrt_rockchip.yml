@@ -52,7 +52,7 @@ jobs:
         remove-android: 'true'
         remove-haskell: 'true'
         remove-codeql: 'true'
-        
+
     - name: Check out the project branch
       uses: actions/checkout@main
       with:
@@ -68,7 +68,7 @@ jobs:
         sudo rm -rf /var/lib/apt/lists/* || true
         rm -rf ~/.cache/* || true
         echo "Cache cleanup complete."
-          
+
     - name: Initialize the compilation environment
       env:
         DEBIAN_FRONTEND: noninteractive
@@ -87,14 +87,14 @@ jobs:
         sudo -E apt-get -qq autoremove --purge
         sudo -E apt-get -qq clean ) &
         sudo timedatectl set-timezone "$TZ"
-        
+
     - name: Initialize Environment and Display System Info
       env:
         DEBIAN_FRONTEND: noninteractive
       run: |
         chmod +x $OPENWRT_NAME/*.sh
         $GITHUB_WORKSPACE/$OPENWRT_NAME/system-Information.sh
-        
+
     - name: Download firmware source code
       run: |
         git clone --depth 1 $REPO_URL -b $REPO_BRANCH openwrt
@@ -104,7 +104,7 @@ jobs:
       run: |
         ./scripts/feeds update -a
         ./scripts/feeds install -a
-        
+
     - name: Load feeds.conf.default
       run: |
         chmod +x $OPENWRT_NAME/*.sh
@@ -170,7 +170,7 @@ jobs:
         rm -rf packages *.buildinfo *.manifest *.json
         echo "FIRMWARE=$PWD" >> $GITHUB_ENV
         echo "status=success" >> $GITHUB_OUTPUT
-        
+
     - name: Upload the firmware to github
       uses: actions/upload-artifact@main
       if: steps.organize.outputs.status == 'success' && !cancelled()
@@ -197,7 +197,7 @@ jobs:
           echo "🎯 目标设备: 全部设备 (Multi-Profile)" >> release.txt
         fi
         echo "status=success" >> $GITHUB_OUTPUT
-        
+
     - name: Publish to release
       uses: softprops/action-gh-release@v1
       if: steps.tag.outputs.status == 'success' && !cancelled()
