@@ -9,6 +9,7 @@ on:
         description: 'Select target device'
         required: true
         type: choice
+        default: 'all'
         options:
           - 'all'
           - 'armsom_sige3'
@@ -183,10 +184,10 @@ jobs:
       if: steps.compile.outputs.status == 'success' && env.UPLOAD_RELEASE == 'true' && !cancelled()
       run: |
         if [ "${{ github.event.inputs.target_device }}" != "all" ]; then
-          echo "release_tag=${{ env.date2 }}_${{ github.event.inputs.target_device }}" >> $GITHUB_OUTPUT
+          echo "release_tag=${{ env.date1 }}_${{ github.event.inputs.target_device }}" >> $GITHUB_OUTPUT
           echo "release_name=${{ env.date2 }} - ${{ github.event.inputs.target_device }}" >> $GITHUB_OUTPUT
         else
-          echo "release_tag=${{ env.date2 }}" >> $GITHUB_OUTPUT
+          echo "release_tag=${{ env.date1 }}" >> $GITHUB_OUTPUT
           echo "release_name=${{ env.date2 }}" >> $GITHUB_OUTPUT
         fi
         touch release.txt
