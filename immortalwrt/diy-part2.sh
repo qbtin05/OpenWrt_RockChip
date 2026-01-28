@@ -9,9 +9,9 @@ sed -i "s/ImmortalWrt/OpenWrt/g" package/base-files/files/bin/config_generate
 if [ -f "feeds/packages/lang/rust/Makefile" ]; then
     echo "Patching Rust Makefile to disable LLVM CI downloads..."
     
-    # Add --set llvm.download-ci-llvm=false to the x.py dist command
+    # Change --set=llvm.download-ci-llvm=true to false in HOST_CONFIGURE_ARGS
     # This tells Rust to build LLVM locally instead of downloading pre-built binaries
-    sed -i 's/\($(PYTHON) \.\/x\.py dist\)/\1 --set llvm.download-ci-llvm=false --set rust.download-ci-llvm=false/' \
+    sed -i 's/--set=llvm\.download-ci-llvm=true/--set=llvm.download-ci-llvm=false/' \
         feeds/packages/lang/rust/Makefile
     
     echo "Rust Makefile patched successfully"
